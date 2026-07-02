@@ -14,27 +14,41 @@ interface Log {
   timestamp: string;
 }
 
+interface Pagination {
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
+  hasPrev: boolean;
+  hasNext: boolean;
+}
+
 export default function AdminPage() {
   const router = useRouter();
   const [logs, setLogs] = useState<Log[]>([]);
+  const [pagination, setPagination] = useState<Pagination | null>(null);
+  const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [selectedSchema, setSelectedSchema] = useState<object | null>(null);
   const [loggingOut, setLoggingOut] = useState(false);
 
   useEffect(() => {
-    fetchLogs();
-  }, []);
+    fetchLogs(page);
+  }, [page]);
 
-  const fetchLogs = async () => {
+  const fetchLogs = async (pageNum: number) => {
+    setLoading(true);
+    setError("");
     try {
-      const res = await fetch("/api/admin/logs");
+      const res = await fetch(`/api/admin/logs?page=${pageNum}`);
       if (res.status === 401) {
         router.push(LOGIN_PATH);
         return;
       }
       const data = await res.json();
       setLogs(data.logs);
+      setPagination(data.pagination);
     } catch {
       setError("Failed to fetch logs.");
     } finally {
@@ -59,7 +73,10 @@ export default function AdminPage() {
         <div>
           <h1 className="text-xl font-bold text-green-900">Admin Panel</h1>
           <p className="text-xs text-green-700 mt-0.5">
-            Generation logs — last 100 requests
+            Generation logs
+            {pagination
+              ? ` — page ${pagination.page} of ${pagination.totalPages} (${pagination.total} total)`
+              : ""}
           </p>
         </div>
         <div className="flex items-center gap-3 shrink-0">
@@ -87,7 +104,7 @@ export default function AdminPage() {
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
             <StatCard
               label="Total Requests"
-              value={logs.length}
+              value={pagination?.total ?? logs.length}
             />
             <StatCard
               label="Avg Fields"
@@ -201,6 +218,34 @@ export default function AdminPage() {
                 ))}
               </tbody>
             </table>
+
+            {pagination && pagination.total > 0 && (
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-3 px-4 py-3 border-t border-green-200">
+                <p className="text-xs text-green-700">
+                  Showing {(pagination.page - 1) * pagination.limit + 1}–
+                  {Math.min(pagination.page * pagination.limit, pagination.total)}{" "}
+                  of {pagination.total}
+                </p>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setPage((p) => p - 1)}
+                    disabled={!pagination.hasPrev || loading}
+                    className="text-sm text-green-700 hover:text-green-900 border border-green-300 hover:border-green-500 bg-white rounded px-4 py-2 min-h-[44px] transition disabled:opacity-40 disabled:cursor-not-allowed"
+                  >
+                    ← Previous
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setPage((p) => p + 1)}
+                    disabled={!pagination.hasNext || loading}
+                    className="text-sm text-green-700 hover:text-green-900 border border-green-300 hover:border-green-500 bg-white rounded px-4 py-2 min-h-[44px] transition disabled:opacity-40 disabled:cursor-not-allowed"
+                  >
+                    Next →
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>
