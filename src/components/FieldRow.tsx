@@ -201,6 +201,21 @@ export default function FieldRow({
                 </select>
               )}
 
+              {(field as any).itemType === "number" && (
+                <select
+                  value={(field as any).fakerType ?? ""}
+                  onChange={(e) => handleFakerTypeChange(e.target.value)}
+                  className={selectClass}
+                >
+                  <option value="">-- select faker type --</option>
+                  {numberFakerOptions.map((o) => (
+                    <option key={o.value} value={o.value}>
+                      {o.label}
+                    </option>
+                  ))}
+                </select>
+              )}
+
               <input
                 type="number"
                 min={1}
