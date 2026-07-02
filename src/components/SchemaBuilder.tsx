@@ -57,7 +57,7 @@ export default function SchemaBuilder({
 
       <button
         onClick={addField}
-        className="mt-1 text-sm text-blue-400 hover:text-blue-300 border border-blue-700 hover:border-blue-500 rounded px-3 py-1 transition hover:bg-blue-900/20"
+        className="mt-1 text-sm text-green-700 hover:text-green-900 border border-green-300 hover:border-green-500 rounded px-3 py-1 transition bg-white hover:bg-green-50"
       >
         + Add Field
       </button>

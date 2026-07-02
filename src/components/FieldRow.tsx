@@ -72,8 +72,8 @@ export default function FieldRow({
 
   return (
     <div
-      className={`border border-gray-700 rounded-lg p-3 mb-2 bg-gray-900 ${
-        depth > 0 ? "ml-4 border-l-2 border-l-blue-500" : ""
+      className={`border border-green-200 rounded-lg p-3 mb-2 bg-white ${
+        depth > 0 ? "ml-4 border-l-2 border-l-green-500" : ""
       }`}
     >
       {/* Top row — key name + type selector + remove */}
@@ -84,14 +84,14 @@ export default function FieldRow({
           value={fieldKey}
           onChange={(e) => onRename(fieldKey, e.target.value)}
           placeholder="field name"
-          className="bg-gray-800 text-white text-sm rounded px-2 py-1 w-36 border border-gray-600 focus:outline-none focus:border-blue-500"
+          className="bg-white text-green-900 text-sm rounded px-2 py-1 w-36 border border-green-300 focus:outline-none focus:border-green-500"
         />
 
         {/* Type selector */}
         <select
           value={field.type}
           onChange={(e) => handleTypeChange(e.target.value as FieldType)}
-          className="bg-gray-800 text-white text-sm rounded px-2 py-1 border border-gray-600 focus:outline-none focus:border-blue-500"
+          className="bg-white text-green-900 text-sm rounded px-2 py-1 border border-green-300 focus:outline-none focus:border-green-500"
         >
           {fieldTypes.map((t) => (
             <option key={t.value} value={t.value}>
@@ -105,7 +105,7 @@ export default function FieldRow({
           <select
             value={(field as any).fakerType ?? ""}
             onChange={(e) => handleFakerTypeChange(e.target.value)}
-            className="bg-gray-800 text-white text-sm rounded px-2 py-1 border border-gray-600 focus:outline-none focus:border-blue-500"
+            className="bg-white text-green-900 text-sm rounded px-2 py-1 border border-green-300 focus:outline-none focus:border-green-500"
           >
             <option value="">-- select faker type --</option>
             {stringFakerOptions.map((o) => (
@@ -121,7 +121,7 @@ export default function FieldRow({
           <select
             value={(field as any).fakerType ?? ""}
             onChange={(e) => handleFakerTypeChange(e.target.value)}
-            className="bg-gray-800 text-white text-sm rounded px-2 py-1 border border-gray-600 focus:outline-none focus:border-blue-500"
+            className="bg-white text-green-900 text-sm rounded px-2 py-1 border border-green-300 focus:outline-none focus:border-green-500"
           >
             <option value="">-- select faker type --</option>
             {numberFakerOptions.map((o) => (
@@ -138,7 +138,7 @@ export default function FieldRow({
             <select
               value={(field as any).itemType ?? "string"}
               onChange={(e) => handleArrayItemTypeChange(e.target.value)}
-              className="bg-gray-800 text-white text-sm rounded px-2 py-1 border border-gray-600 focus:outline-none focus:border-blue-500"
+              className="bg-white text-green-900 text-sm rounded px-2 py-1 border border-green-300 focus:outline-none focus:border-green-500"
             >
               {arrayItemTypes.map((t) => (
                 <option key={t.value} value={t.value}>
@@ -152,7 +152,7 @@ export default function FieldRow({
               <select
                 value={(field as any).fakerType ?? ""}
                 onChange={(e) => handleFakerTypeChange(e.target.value)}
-                className="bg-gray-800 text-white text-sm rounded px-2 py-1 border border-gray-600 focus:outline-none focus:border-blue-500"
+                className="bg-white text-green-900 text-sm rounded px-2 py-1 border border-green-300 focus:outline-none focus:border-green-500"
               >
                 <option value="">-- select faker type --</option>
                 {stringFakerOptions.map((o) => (
@@ -172,7 +172,7 @@ export default function FieldRow({
               onChange={(e) =>
                 handleArrayCountChange(Number(e.target.value))
               }
-              className="bg-gray-800 text-white text-sm rounded px-2 py-1 w-20 border border-gray-600 focus:outline-none focus:border-blue-500"
+              className="bg-white text-green-900 text-sm rounded px-2 py-1 w-20 border border-green-300 focus:outline-none focus:border-green-500"
             />
           </>
         )}
@@ -180,7 +180,7 @@ export default function FieldRow({
         {/* Remove button */}
         <button
           onClick={() => onRemove(fieldKey)}
-          className="ml-auto text-red-400 hover:text-red-300 text-sm px-2 py-1 rounded hover:bg-red-900/30 transition"
+          className="ml-auto text-red-600 hover:text-red-700 text-sm px-2 py-1 rounded hover:bg-red-50 transition"
         >
           ✕ Remove
         </button>
@@ -200,7 +200,7 @@ export default function FieldRow({
       {/* Nested array object fields */}
       {field.type === "array" && (field as any).itemType === "object" && (
         <div className="mt-3">
-          <p className="text-xs text-gray-400 mb-1">Array item structure:</p>
+          <p className="text-xs text-green-700 mb-1">Array item structure:</p>
           <SchemaBuilder
             schema={(field as any).fields ?? {}}
             onChange={handleNestedUpdate}
