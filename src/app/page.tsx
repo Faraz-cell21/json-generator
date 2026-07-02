@@ -2,8 +2,11 @@
 
 import { useState } from "react";
 import SchemaBuilder from "@/components/SchemaBuilder";
-import { SchemaState } from "@/types/schema";
-import { generateRecords } from "@/lib/generator";
+import {
+  SchemaState,
+  countNamedFields,
+  hasUnnamedFields,
+} from "@/types/schema";
 
 export default function Home() {
   const [schema, setSchema] = useState<SchemaState>({});
@@ -14,8 +17,13 @@ export default function Home() {
   const [copied, setCopied] = useState(false);
 
   const handleGenerate = async () => {
-    if (Object.keys(schema).length === 0) {
+    if (countNamedFields(schema) === 0) {
       setError("Please add at least one field.");
+      return;
+    }
+
+    if (hasUnnamedFields(schema)) {
+      setError("Please name all fields before generating.");
       return;
     }
 
@@ -23,7 +31,7 @@ export default function Home() {
     setLoading(true);
 
     try {
-      // Generate JSON on the client
+      const { generateRecords } = await import("@/lib/generator");
       const generated = generateRecords(schema, records);
       setOutput(JSON.stringify(generated, null, 2));
 
@@ -70,9 +78,9 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen bg-green-50 text-green-950">
+    <main className="min-h-screen bg-green-50 text-green-950 w-full max-w-full">
       {/* Header */}
-      <header className="border-b border-green-200 bg-white px-6 py-4 flex items-center justify-between">
+      <header className="border-b border-green-200 bg-white px-4 sm:px-6 py-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-xl font-bold text-green-900 tracking-tight">
             JSON Generator
@@ -82,23 +90,24 @@ export default function Home() {
           </p>
         </div>
         <button
+          type="button"
           onClick={handleReset}
-          className="text-sm text-green-700 hover:text-green-900 border border-green-300 hover:border-green-500 bg-white rounded px-3 py-1.5 transition"
+          className="text-sm text-green-700 hover:text-green-900 border border-green-300 hover:border-green-500 bg-white rounded px-4 py-2.5 min-h-[44px] transition"
         >
           Reset
         </button>
       </header>
 
-      <div className="flex flex-col lg:flex-row h-[calc(100vh-65px)]">
+      <div className="w-full max-w-full flex flex-col lg:flex-row lg:h-[calc(100vh-65px)]">
         {/* Left Panel — Schema Builder */}
-        <div className="lg:w-1/2 p-6 overflow-y-auto border-r border-green-200 bg-white">
+        <section className="w-full max-w-full lg:w-1/2 p-4 sm:p-6 lg:overflow-y-auto border-b lg:border-b-0 lg:border-r border-green-200 bg-white relative z-20">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-sm font-semibold text-green-800 uppercase tracking-widest">
               Schema
             </h2>
             <span className="text-xs text-green-700">
-              {Object.keys(schema).length} field
-              {Object.keys(schema).length !== 1 ? "s" : ""}
+              {countNamedFields(schema)} field
+              {countNamedFields(schema) !== 1 ? "s" : ""}
             </span>
           </div>
 
@@ -106,7 +115,7 @@ export default function Home() {
 
           {/* Record count + Generate */}
           <div className="mt-6 pt-6 border-t border-green-200">
-            <div className="flex items-center gap-3 mb-4">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-4">
               <label className="text-sm text-green-800 whitespace-nowrap">
                 Records to generate:
               </label>
@@ -128,17 +137,18 @@ export default function Home() {
             )}
 
             <button
+              type="button"
               onClick={handleGenerate}
               disabled={loading}
-              className="w-full bg-green-600 hover:bg-green-500 disabled:bg-green-300 disabled:text-green-700 text-white font-medium rounded-lg px-4 py-2.5 transition text-sm"
+              className="w-full bg-green-600 hover:bg-green-500 active:bg-green-700 disabled:bg-green-300 disabled:text-green-700 text-white font-medium rounded-lg px-4 py-3 min-h-[48px] transition text-sm"
             >
               {loading ? "Generating..." : "Generate JSON"}
             </button>
           </div>
-        </div>
+        </section>
 
         {/* Right Panel — JSON Output */}
-        <div className="lg:w-1/2 p-6 overflow-y-auto flex flex-col">
+        <section className="w-full max-w-full lg:w-1/2 p-4 sm:p-6 lg:overflow-y-auto flex flex-col relative z-10">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-sm font-semibold text-green-800 uppercase tracking-widest">
               Output
@@ -147,14 +157,16 @@ export default function Home() {
             {output && (
               <div className="flex gap-2">
                 <button
+                  type="button"
                   onClick={handleCopy}
-                  className="text-xs text-green-700 hover:text-green-900 border border-green-300 hover:border-green-500 bg-white rounded px-3 py-1 transition"
+                  className="text-xs text-green-700 hover:text-green-900 border border-green-300 hover:border-green-500 bg-white rounded px-3 py-2 min-h-[44px] transition"
                 >
                   {copied ? "✓ Copied" : "Copy"}
                 </button>
                 <button
+                  type="button"
                   onClick={handleDownload}
-                  className="text-xs text-green-700 hover:text-green-900 border border-green-300 hover:border-green-500 bg-white rounded px-3 py-1 transition"
+                  className="text-xs text-green-700 hover:text-green-900 border border-green-300 hover:border-green-500 bg-white rounded px-3 py-2 min-h-[44px] transition"
                 >
                   Download
                 </button>
@@ -167,7 +179,7 @@ export default function Home() {
               {output}
             </pre>
           ) : (
-            <div className="flex-1 bg-white border border-green-300 border-dashed rounded-lg flex items-center justify-center">
+            <div className="min-h-[220px] lg:flex-1 bg-white border border-green-300 border-dashed rounded-lg flex items-center justify-center">
               <div className="text-center">
                 <p className="text-green-700 text-sm">
                   No output yet
@@ -178,7 +190,7 @@ export default function Home() {
               </div>
             </div>
           )}
-        </div>
+        </section>
       </div>
     </main>
   );

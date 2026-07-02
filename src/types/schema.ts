@@ -24,3 +24,41 @@ export interface ArrayField extends BaseField {
 
 export type SchemaField = PrimitiveField | ObjectField | ArrayField;
 export type SchemaState = Record<string, SchemaField>;
+
+export const UNNAMED_FIELD_PREFIX = "__new_";
+
+export function isUnnamedFieldKey(key: string): boolean {
+  return key.startsWith(UNNAMED_FIELD_PREFIX);
+}
+
+export function hasUnnamedFields(schema: SchemaState): boolean {
+  for (const key in schema) {
+    if (isUnnamedFieldKey(key)) return true;
+    const field = schema[key];
+    if (field.type === "object" && hasUnnamedFields(field.fields)) return true;
+    if (
+      field.type === "array" &&
+      field.itemType === "object" &&
+      field.fields &&
+      hasUnnamedFields(field.fields)
+    ) {
+      return true;
+    }
+  }
+  return false;
+}
+
+export function countNamedFields(schema: SchemaState): number {
+  let count = 0;
+  for (const key in schema) {
+    if (isUnnamedFieldKey(key)) continue;
+    count++;
+    const field = schema[key];
+    if (field.type === "object") {
+      count += countNamedFields(field.fields);
+    } else if (field.type === "array" && field.itemType === "object" && field.fields) {
+      count += countNamedFields(field.fields);
+    }
+  }
+  return count;
+}

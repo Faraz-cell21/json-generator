@@ -1,6 +1,6 @@
 "use client";
 
-import { SchemaField, SchemaState } from "@/types/schema";
+import { SchemaField, SchemaState, UNNAMED_FIELD_PREFIX } from "@/types/schema";
 import FieldRow from "./FieldRow";
 
 interface SchemaBuilderProps {
@@ -15,7 +15,7 @@ export default function SchemaBuilder({
   depth = 0,
 }: SchemaBuilderProps) {
   const addField = () => {
-    const key = `field_${Date.now()}`;
+    const key = `${UNNAMED_FIELD_PREFIX}${Date.now()}`;
     onChange({
       ...schema,
       [key]: { type: "string" },
@@ -42,7 +42,7 @@ export default function SchemaBuilder({
   };
 
   return (
-    <div>
+    <div className="w-full max-w-full">
       {Object.entries(schema).map(([key, field]) => (
         <FieldRow
           key={key}
@@ -56,8 +56,9 @@ export default function SchemaBuilder({
       ))}
 
       <button
+        type="button"
         onClick={addField}
-        className="mt-1 text-sm text-green-700 hover:text-green-900 border border-green-300 hover:border-green-500 rounded px-3 py-1 transition bg-white hover:bg-green-50"
+        className="mt-2 w-full sm:w-auto text-sm text-green-700 hover:text-green-900 active:text-green-950 border border-green-300 hover:border-green-500 rounded px-4 py-3 min-h-[48px] transition bg-white hover:bg-green-50"
       >
         + Add Field
       </button>
