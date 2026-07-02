@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { SchemaField, FieldType } from "@/types/schema";
 import {
   stringFakerOptions,
@@ -33,6 +34,23 @@ export default function FieldRow({
   onRename,
   depth = 0,
 }: FieldRowProps) {
+  const [draftFieldKey, setDraftFieldKey] = useState(fieldKey);
+
+  useEffect(() => {
+    setDraftFieldKey(fieldKey);
+  }, [fieldKey]);
+
+  const commitRename = () => {
+    const nextKey = draftFieldKey.trim();
+    if (!nextKey) {
+      setDraftFieldKey(fieldKey);
+      return;
+    }
+    if (nextKey !== fieldKey) {
+      onRename(fieldKey, nextKey);
+    }
+  };
+
   const handleTypeChange = (newType: FieldType) => {
     if (newType === "object") {
       onUpdate(fieldKey, { type: "object", fields: {} });
@@ -81,8 +99,16 @@ export default function FieldRow({
         {/* Field name */}
         <input
           type="text"
-          value={fieldKey}
-          onChange={(e) => onRename(fieldKey, e.target.value)}
+          value={draftFieldKey}
+          onChange={(e) => setDraftFieldKey(e.target.value)}
+          onBlur={commitRename}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              commitRename();
+              (e.target as HTMLInputElement).blur();
+            }
+          }}
           placeholder="field name"
           className="bg-white text-green-900 text-sm rounded px-2 py-1 w-36 border border-green-300 focus:outline-none focus:border-green-500"
         />
