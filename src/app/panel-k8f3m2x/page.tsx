@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { LOGIN_PATH } from "@/lib/authRoutes";
 
 interface Log {
   _id: string;
@@ -29,7 +30,7 @@ export default function AdminPage() {
     try {
       const res = await fetch("/api/admin/logs");
       if (res.status === 401) {
-        router.push("/login");
+        router.push(LOGIN_PATH);
         return;
       }
       const data = await res.json();
@@ -44,7 +45,7 @@ export default function AdminPage() {
   const handleLogout = async () => {
     setLoggingOut(true);
     await fetch("/api/auth/logout", { method: "POST" });
-    router.push("/login");
+    router.push(LOGIN_PATH);
   };
 
   const formatDate = (ts: string) => {
@@ -54,31 +55,33 @@ export default function AdminPage() {
   return (
     <main className="min-h-screen bg-green-50 text-green-950">
       {/* Header */}
-      <header className="border-b border-green-200 bg-white px-6 py-4 flex items-center justify-between">
+      <header className="border-b border-green-200 bg-white px-4 sm:px-6 py-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-xl font-bold text-green-900">Admin Panel</h1>
           <p className="text-xs text-green-700 mt-0.5">
             Generation logs — last 100 requests
           </p>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 shrink-0">
           <button
+            type="button"
             onClick={() => router.push("/")}
-            className="text-sm text-green-700 hover:text-green-900 border border-green-300 hover:border-green-500 bg-white rounded px-3 py-1.5 transition"
+            className="text-sm text-green-700 hover:text-green-900 border border-green-300 hover:border-green-500 bg-white rounded px-3 py-2 min-h-[44px] transition"
           >
             ← Back to App
           </button>
           <button
+            type="button"
             onClick={handleLogout}
             disabled={loggingOut}
-            className="text-sm text-red-400 hover:text-red-300 border border-red-900 hover:border-red-700 rounded px-3 py-1.5 transition"
+            className="text-sm text-red-400 hover:text-red-300 border border-red-900 hover:border-red-700 rounded px-3 py-2 min-h-[44px] transition"
           >
             {loggingOut ? "Logging out..." : "Logout"}
           </button>
         </div>
       </header>
 
-      <div className="p-6">
+      <div className="p-4 sm:p-6 w-full max-w-full overflow-x-hidden">
         {/* Stats Row */}
         {!loading && !error && (
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
@@ -135,8 +138,11 @@ export default function AdminPage() {
 
         {/* Logs Table */}
         {!loading && !error && (
-          <div className="bg-white border border-green-200 rounded-xl overflow-hidden">
-            <table className="w-full text-sm">
+          <div className="bg-white border border-green-200 rounded-xl overflow-x-auto overscroll-x-contain">
+            <p className="sm:hidden text-xs text-green-700 px-4 pt-3">
+              Swipe table horizontally to see all columns
+            </p>
+            <table className="w-full min-w-[640px] text-sm">
               <thead>
                 <tr className="border-b border-green-200 text-green-800 text-xs uppercase tracking-wider">
                   <th className="text-left px-4 py-3">Timestamp</th>
@@ -168,7 +174,7 @@ export default function AdminPage() {
                     <td className="px-4 py-3 text-green-900 whitespace-nowrap">
                       {formatDate(log.timestamp)}
                     </td>
-                    <td className="px-4 py-3 text-green-900 font-mono text-xs">
+                    <td className="px-4 py-3 text-green-900 font-mono text-xs whitespace-nowrap">
                       {log.ip_address}
                     </td>
                     <td className="px-4 py-3 text-center text-green-950 font-medium">
@@ -182,10 +188,11 @@ export default function AdminPage() {
                     </td>
                     <td className="px-4 py-3 text-center">
                       <button
+                        type="button"
                         onClick={() =>
                           setSelectedSchema(log.schema_submitted)
                         }
-                        className="text-xs text-green-700 hover:text-green-900 border border-green-300 hover:border-green-500 bg-white rounded px-2 py-1 transition"
+                        className="text-xs text-green-700 hover:text-green-900 border border-green-300 hover:border-green-500 bg-white rounded px-2 py-2 min-h-[36px] transition whitespace-nowrap"
                       >
                         View
                       </button>

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { ADMIN_PATH } from "@/lib/authRoutes";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -33,7 +34,7 @@ export default function LoginPage() {
         return;
       }
 
-      router.push("/admin");
+      router.push(ADMIN_PATH);
     } catch {
       setError("Something went wrong. Please try again.");
     } finally {

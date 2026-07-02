@@ -1,31 +1,30 @@
 import { NextRequest, NextResponse } from "next/server";
 import { jwtVerify } from "jose";
-
-const protectedRoutes = ["/admin"];
+import { ADMIN_PATH, LOGIN_PATH } from "@/lib/authRoutes";
 
 export async function middleware(req: NextRequest) {
-    const { pathname } = req.nextUrl;
+  const { pathname } = req.nextUrl;
 
-    const isProtected = protectedRoutes.some((route) => 
-        pathname.startsWith(route));
+  if (!pathname.startsWith(ADMIN_PATH)) {
+    return NextResponse.next();
+  }
 
-    if (!isProtected) return NextResponse.next();
+  const token = req.cookies.get("admin_token")?.value;
 
-    const token = req.cookies.get("admin_token")?.value;
+  if (!token) {
+    return NextResponse.redirect(new URL(LOGIN_PATH, req.url));
+  }
 
-    if (!token) {
-        return NextResponse.redirect(new URL("/login", req.url));
-    }
-
-    try {
-        const secret = new TextEncoder().encode(process.env.JWT_SECRET);
-        await jwtVerify(token, secret);
-        return NextResponse.next();
-    } catch (error) {
-        return NextResponse.redirect(new URL("/login", req.url));
-    }
+  try {
+    const secret = new TextEncoder().encode(process.env.JWT_SECRET);
+    await jwtVerify(token, secret);
+    return NextResponse.next();
+  } catch {
+    return NextResponse.redirect(new URL(LOGIN_PATH, req.url));
+  }
 }
 
 export const config = {
-    matcher: ["/admin/:path*"],
-}
+  // Must match the admin app folder name (see NEXT_PUBLIC_ADMIN_PATH).
+  matcher: ["/panel-k8f3m2x/:path*"],
+};
