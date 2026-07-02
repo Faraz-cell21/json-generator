@@ -35,14 +35,14 @@ export default function HomeGenerator() {
       const generated = generateRecords(schema, records);
       setOutput(JSON.stringify(generated, null, 2));
 
-      await fetch("/api/log", {
+      void fetch("/api/log", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           schema,
           records_requested: records,
         }),
-      });
+      }).catch((err) => console.error("Failed to log generation:", err));
     } catch (err) {
       setError("Something went wrong during generation.");
       console.error(err);
