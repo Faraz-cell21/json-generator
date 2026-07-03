@@ -26,6 +26,56 @@ export interface ArrayField {
 export type SchemaInput = Record<string, FieldSchema>;
 
 const customStringGenerators: Record<string, () => string> = {
+  "custom.sex": () =>
+    faker.helpers.arrayElement([
+      "male",
+      "female",
+      "intersex",
+      "non-binary",
+      "genderqueer",
+      "agender",
+      "other",
+      "prefer not to say",
+    ]),
+  "custom.prefix": () =>
+    faker.helpers.arrayElement([
+      "Mr.",
+      "Ms.",
+      "Mrs.",
+      "Miss",
+      "Dr.",
+      "Prof.",
+      "Mx.",
+    ]),
+  "custom.protocol": () =>
+    faker.helpers.arrayElement([
+      "http",
+      "https",
+      "ftp",
+      "ftps",
+      "ws",
+      "wss",
+      "smtp",
+      "imap",
+      "pop3",
+      "ssh",
+    ]),
+  "custom.creditCardIssuer": () =>
+    faker.finance
+      .creditCardIssuer()
+      .replace(/_/g, " ")
+      .replace(/\b\w/g, (c) => c.toUpperCase()),
+  "custom.gitShortSha": () => faker.git.commitSha({ length: 7 }),
+  "custom.language": () => faker.location.language().name,
+  "custom.languageCode": () => faker.location.language().alpha2,
+  "custom.monthName": () => faker.date.month(),
+  "custom.airportName": () => faker.airline.airport().name,
+  "custom.airportIata": () => faker.airline.airport().iataCode,
+  "custom.flightNumber": () => faker.airline.flightNumber(),
+  "custom.seatNumber": () => faker.airline.seat(),
+  "custom.airlineName": () => faker.airline.airline().name,
+  "custom.aircraftType": () => faker.airline.aircraftType(),
+  "custom.recordLocator": () => faker.airline.recordLocator(),
   "custom.birthdateIso": () => faker.date.birthdate().toISOString().split("T")[0],
   "custom.datePastIso": () => faker.date.past().toISOString().split("T")[0],
   "custom.dateFutureIso": () => faker.date.future().toISOString().split("T")[0],
@@ -39,6 +89,9 @@ const customStringGenerators: Record<string, () => string> = {
 };
 
 const customNumberGenerators: Record<string, () => number> = {
+  "custom.randomInt": () => faker.number.int({ min: 1, max: 10000 }),
+  "custom.randomFloat": () =>
+    faker.number.float({ min: 0, max: 100, fractionDigits: 2 }),
   "custom.bigInt": () => Number(faker.number.bigInt()),
   "custom.ageChildYoung": () => faker.number.int({ min: 1, max: 12 }),
   "custom.ageTeen": () => faker.number.int({ min: 13, max: 17 }),

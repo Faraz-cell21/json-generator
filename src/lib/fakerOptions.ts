@@ -9,10 +9,10 @@ export const stringFakerOptions: FakerOption[] = [
   { label: "Last Name", value: "person.lastName" },
   { label: "Middle Name", value: "person.middleName" },
   { label: "Full Name", value: "person.fullName" },
-  { label: "Prefix", value: "person.prefix" },
+  { label: "Prefix", value: "custom.prefix" },
   { label: "Suffix", value: "person.suffix" },
   { label: "Gender", value: "person.gender" },
-  { label: "Sex", value: "person.sex" },
+  { label: "Sex", value: "custom.sex" },
   { label: "Bio", value: "person.bio" },
   { label: "Zodiac Sign", value: "person.zodiacSign" },
   { label: "Job Title", value: "person.jobTitle" },
@@ -30,7 +30,7 @@ export const stringFakerOptions: FakerOption[] = [
   { label: "Domain Suffix", value: "internet.domainSuffix" },
   { label: "Domain Word", value: "internet.domainWord" },
   { label: "URL", value: "internet.url" },
-  { label: "Protocol", value: "internet.protocol" },
+  { label: "Protocol", value: "custom.protocol" },
   { label: "IP Address", value: "internet.ip" },
   { label: "IPv4", value: "internet.ipv4" },
   { label: "IPv6", value: "internet.ipv6" },
@@ -57,6 +57,8 @@ export const stringFakerOptions: FakerOption[] = [
   { label: "Country", value: "location.country" },
   { label: "Country Code", value: "location.countryCode" },
   { label: "Continent", value: "location.continent" },
+  { label: "Language", value: "custom.language" },
+  { label: "Language Code", value: "custom.languageCode" },
   { label: "Direction", value: "location.direction" },
   { label: "Time Zone", value: "location.timeZone" },
 
@@ -82,7 +84,7 @@ export const stringFakerOptions: FakerOption[] = [
   { label: "Routing Number", value: "finance.routingNumber" },
   { label: "Credit Card Number", value: "finance.creditCardNumber" },
   { label: "Credit Card CVV", value: "finance.creditCardCVV" },
-  { label: "Credit Card Issuer", value: "finance.creditCardIssuer" },
+  { label: "Credit Card Issuer", value: "custom.creditCardIssuer" },
   { label: "Currency Code", value: "finance.currencyCode" },
   { label: "Currency Name", value: "finance.currencyName" },
   { label: "Currency Symbol", value: "finance.currencySymbol" },
@@ -102,6 +104,15 @@ export const stringFakerOptions: FakerOption[] = [
   { label: "VIN", value: "vehicle.vin" },
   { label: "Vehicle Color", value: "vehicle.color" },
 
+  // Airline
+  { label: "Airport Name", value: "custom.airportName" },
+  { label: "Airport IATA", value: "custom.airportIata" },
+  { label: "Airline", value: "custom.airlineName" },
+  { label: "Flight Number", value: "custom.flightNumber" },
+  { label: "Seat Number", value: "custom.seatNumber" },
+  { label: "Aircraft Type", value: "custom.aircraftType" },
+  { label: "Record Locator", value: "custom.recordLocator" },
+
   // Color & image
   { label: "Color Name", value: "color.human" },
   { label: "RGB Color", value: "color.rgb" },
@@ -115,6 +126,7 @@ export const stringFakerOptions: FakerOption[] = [
   { label: "Date (Future ISO)", value: "custom.dateFutureIso" },
   { label: "Date (Recent ISO)", value: "custom.dateRecentIso" },
   { label: "DateTime (ISO)", value: "custom.dateTimeIso" },
+  { label: "Month Name", value: "custom.monthName" },
   { label: "Weekday", value: "date.weekday" },
 
   // Lorem & words
@@ -152,7 +164,7 @@ export const stringFakerOptions: FakerOption[] = [
   { label: "Git Branch", value: "git.branch" },
   { label: "Git Commit Message", value: "git.commitMessage" },
   { label: "Git Commit SHA", value: "git.commitSha" },
-  { label: "Git Short SHA", value: "git.shortSha" },
+  { label: "Git Short SHA", value: "custom.gitShortSha" },
   { label: "MongoDB ObjectId", value: "database.mongodbObjectId" },
   { label: "DB Column Name", value: "database.column" },
   { label: "DB Engine", value: "database.engine" },
@@ -172,10 +184,10 @@ export const stringFakerOptions: FakerOption[] = [
 
 export const numberFakerOptions: FakerOption[] = [
   // Native faker numbers
-  { label: "Random Int", value: "number.int" },
-  { label: "Random Float", value: "number.float" },
+  { label: "Random Int (1-10000)", value: "custom.randomInt" },
+  { label: "Random Float (0-100)", value: "custom.randomFloat" },
   { label: "Big Int", value: "custom.bigInt" },
-  { label: "HTTP Status Code", value: "internet.httpStatusCode" },
+  { label: "HTTP Status Code", value: "custom.httpStatus" },
   { label: "Network Port", value: "internet.port" },
 
   // Age
