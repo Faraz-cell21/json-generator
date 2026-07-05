@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import SchemaBuilder from "@/components/SchemaBuilder";
+import ImportJsonModal from "@/components/ImportJsonModal";
+import PasteJsonModal from "@/components/PasteJsonModal";
 import {
   SchemaState,
   countNamedFields,
@@ -15,6 +17,8 @@ export default function HomeGenerator() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string>("");
   const [copied, setCopied] = useState(false);
+  const [importOpen, setImportOpen] = useState(false);
+  const [pasteOpen, setPasteOpen] = useState(false);
 
   const handleGenerate = async () => {
     if (countNamedFields(schema) === 0) {
@@ -76,8 +80,26 @@ export default function HomeGenerator() {
     setCopied(false);
   };
 
+  const handleImport = (imported: SchemaState, suggestedRecords: number) => {
+    setSchema(imported);
+    setRecords(suggestedRecords);
+    setOutput("");
+    setError("");
+    setCopied(false);
+  };
+
   return (
     <>
+      <ImportJsonModal
+        open={importOpen}
+        onClose={() => setImportOpen(false)}
+        onImport={handleImport}
+      />
+      <PasteJsonModal
+        open={pasteOpen}
+        onClose={() => setPasteOpen(false)}
+        onImport={handleImport}
+      />
       <header className="border-b border-green-200 bg-white px-4 sm:px-6 py-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-xl font-bold text-green-900 tracking-tight">
@@ -87,13 +109,29 @@ export default function HomeGenerator() {
             Define your schema and generate realistic fake JSON data
           </p>
         </div>
-        <button
-          type="button"
-          onClick={handleReset}
-          className="text-sm text-green-700 hover:text-green-900 border border-green-300 hover:border-green-500 bg-white rounded px-4 py-2.5 min-h-[44px] transition"
-        >
-          Reset
-        </button>
+        <div className="flex items-center gap-2 shrink-0">
+          <button
+            type="button"
+            onClick={() => setPasteOpen(true)}
+            className="text-sm text-green-700 hover:text-green-900 border border-green-300 hover:border-green-500 bg-white rounded px-4 py-2.5 min-h-[44px] transition"
+          >
+            Paste JSON
+          </button>
+          <button
+            type="button"
+            onClick={() => setImportOpen(true)}
+            className="text-sm text-green-700 hover:text-green-900 border border-green-300 hover:border-green-500 bg-white rounded px-4 py-2.5 min-h-[44px] transition"
+          >
+            Upload JSON
+          </button>
+          <button
+            type="button"
+            onClick={handleReset}
+            className="text-sm text-green-700 hover:text-green-900 border border-green-300 hover:border-green-500 bg-white rounded px-4 py-2.5 min-h-[44px] transition"
+          >
+            Reset
+          </button>
+        </div>
       </header>
 
       <div className="w-full max-w-full flex flex-col lg:flex-row lg:h-[calc(100vh-65px)]">
