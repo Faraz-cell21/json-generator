@@ -23,7 +23,7 @@ export default function NotFound() {
         </div>
 
         <p className="text-xs text-green-600 mt-4">
-          JSON Generator - fake data, real fast
+          JSON Generator
         </p>
       </div>
     </main>

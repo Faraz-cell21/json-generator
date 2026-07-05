@@ -49,7 +49,7 @@ export default function LoginPage() {
         <div className="mb-8 text-center">
           <h1 className="text-2xl font-bold text-green-900">Admin Login</h1>
           <p className="text-green-700 text-sm mt-1">
-            JSON Generator — Admin Panel
+            JSON Generator admin
           </p>
         </div>
 

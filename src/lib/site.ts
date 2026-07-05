@@ -13,7 +13,7 @@ export function getSiteUrl(): string {
 
 export const siteConfig = {
   name: "JSON Generator",
-  title: "JSON Generator - Create Fake JSON Data Online",
+  title: "JSON Generator | Create Fake JSON Data Online",
   description:
     "Free online JSON generator. Define a custom schema and generate realistic fake JSON data for API testing, mock databases, and prototyping.",
   keywords: [

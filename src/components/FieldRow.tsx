@@ -125,7 +125,7 @@ export default function FieldRow({
             onClick={() => onRemove(fieldKey)}
             className="shrink-0 text-red-600 hover:text-red-700 active:text-red-800 text-sm px-3 py-2 min-h-[44px] rounded hover:bg-red-50 active:bg-red-100 transition"
           >
-            ✕ Remove
+            Remove
           </button>
         </div>
 
@@ -148,7 +148,7 @@ export default function FieldRow({
               onChange={(e) => handleFakerTypeChange(e.target.value)}
               className={selectClass}
             >
-              <option value="">-- select faker type --</option>
+              <option value="">Select faker type</option>
               {stringFakerOptions.map((o) => (
                 <option key={o.value} value={o.value}>
                   {o.label}
@@ -163,7 +163,7 @@ export default function FieldRow({
               onChange={(e) => handleFakerTypeChange(e.target.value)}
               className={selectClass}
             >
-              <option value="">-- select faker type --</option>
+              <option value="">Select faker type</option>
               {numberFakerOptions.map((o) => (
                 <option key={o.value} value={o.value}>
                   {o.label}
@@ -192,7 +192,7 @@ export default function FieldRow({
                   onChange={(e) => handleFakerTypeChange(e.target.value)}
                   className={selectClass}
                 >
-                  <option value="">-- select faker type --</option>
+                  <option value="">Select faker type</option>
                   {stringFakerOptions.map((o) => (
                     <option key={o.value} value={o.value}>
                       {o.label}
@@ -207,7 +207,7 @@ export default function FieldRow({
                   onChange={(e) => handleFakerTypeChange(e.target.value)}
                   className={selectClass}
                 >
-                  <option value="">-- select faker type --</option>
+                  <option value="">Select faker type</option>
                   {numberFakerOptions.map((o) => (
                     <option key={o.value} value={o.value}>
                       {o.label}

@@ -75,11 +75,11 @@ export default function SeoContent() {
             seeding. Define fields, pick faker types, and export JSON in seconds.
           </p>
 
-          <ul className="grid sm:grid-cols-2 gap-2 text-sm text-green-800 mb-8">
-            <li>• Visual schema builder with nested objects and arrays</li>
-            <li>• 100+ faker options for strings and numbers</li>
-            <li>• Generate up to 1000 records per request</li>
-            <li>• Copy or download JSON output instantly</li>
+          <ul className="grid sm:grid-cols-2 gap-2 text-sm text-green-800 mb-8 list-disc pl-5">
+            <li>Visual schema builder with nested objects and arrays</li>
+            <li>100+ faker options for strings and numbers</li>
+            <li>Generate up to 1000 records per request</li>
+            <li>Copy or download JSON output instantly</li>
           </ul>
 
           <h3 className="text-base font-semibold text-green-900 mb-3">

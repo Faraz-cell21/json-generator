@@ -154,7 +154,7 @@ export default function HomeGenerator() {
                   onClick={handleCopy}
                   className="text-xs text-green-700 hover:text-green-900 border border-green-300 hover:border-green-500 bg-white rounded px-3 py-2 min-h-[44px] transition"
                 >
-                  {copied ? "✓ Copied" : "Copy"}
+                  {copied ? "Copied" : "Copy"}
                 </button>
                 <button
                   type="button"

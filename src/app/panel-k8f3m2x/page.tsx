@@ -75,7 +75,7 @@ export default function AdminPage() {
           <p className="text-xs text-green-700 mt-0.5">
             Generation logs
             {pagination
-              ? ` — page ${pagination.page} of ${pagination.totalPages} (${pagination.total} total)`
+              ? `, page ${pagination.page} of ${pagination.totalPages} (${pagination.total} total)`
               : ""}
           </p>
         </div>
@@ -85,7 +85,7 @@ export default function AdminPage() {
             onClick={() => router.push("/")}
             className="text-sm text-green-700 hover:text-green-900 border border-green-300 hover:border-green-500 bg-white rounded px-3 py-2 min-h-[44px] transition"
           >
-            ← Back to App
+            Back to app
           </button>
           <button
             type="button"
@@ -222,7 +222,7 @@ export default function AdminPage() {
             {pagination && pagination.total > 0 && (
               <div className="flex flex-col sm:flex-row items-center justify-between gap-3 px-4 py-3 border-t border-green-200">
                 <p className="text-xs text-green-700">
-                  Showing {(pagination.page - 1) * pagination.limit + 1}–
+                  Showing {(pagination.page - 1) * pagination.limit + 1}-
                   {Math.min(pagination.page * pagination.limit, pagination.total)}{" "}
                   of {pagination.total}
                 </p>
@@ -233,7 +233,7 @@ export default function AdminPage() {
                     disabled={!pagination.hasPrev || loading}
                     className="text-sm text-green-700 hover:text-green-900 border border-green-300 hover:border-green-500 bg-white rounded px-4 py-2 min-h-[44px] transition disabled:opacity-40 disabled:cursor-not-allowed"
                   >
-                    ← Previous
+                    Previous
                   </button>
                   <button
                     type="button"
@@ -241,7 +241,7 @@ export default function AdminPage() {
                     disabled={!pagination.hasNext || loading}
                     className="text-sm text-green-700 hover:text-green-900 border border-green-300 hover:border-green-500 bg-white rounded px-4 py-2 min-h-[44px] transition disabled:opacity-40 disabled:cursor-not-allowed"
                   >
-                    Next →
+                    Next
                   </button>
                 </div>
               </div>
@@ -266,7 +266,7 @@ export default function AdminPage() {
                 onClick={() => setSelectedSchema(null)}
                 className="text-green-700 hover:text-green-900 text-sm"
               >
-                ✕ Close
+                Close
               </button>
             </div>
             <pre className="text-green-900 text-xs font-mono whitespace-pre-wrap break-words bg-green-50 rounded-lg p-4 border border-green-200">
