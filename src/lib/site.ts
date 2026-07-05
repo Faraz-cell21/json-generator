@@ -1,14 +1,33 @@
-export function getSiteUrl(): string {
-  const url =
-    process.env.NEXT_PUBLIC_SITE_URL?.trim() ||
-    process.env.VERCEL_URL?.trim() ||
-    "http://localhost:3000";
+function normalizeSiteUrl(raw?: string): string | null {
+  if (!raw?.trim()) return null;
 
-  if (url.startsWith("http://") || url.startsWith("https://")) {
-    return url.replace(/\/$/, "");
+  let url = raw.trim();
+  if (!url.startsWith("http://") && !url.startsWith("https://")) {
+    url = `https://${url}`;
   }
 
-  return `https://${url.replace(/\/$/, "")}`;
+  try {
+    const parsed = new URL(url);
+    if (!parsed.hostname) return null;
+    return `${parsed.protocol}//${parsed.host}`;
+  } catch {
+    return null;
+  }
+}
+
+export function getSiteUrl(): string {
+  const candidates = [
+    process.env.NEXT_PUBLIC_SITE_URL,
+    process.env.VERCEL_PROJECT_PRODUCTION_URL,
+    process.env.VERCEL_URL,
+  ];
+
+  for (const candidate of candidates) {
+    const url = normalizeSiteUrl(candidate);
+    if (url) return url;
+  }
+
+  return "http://localhost:3000";
 }
 
 export const siteConfig = {
