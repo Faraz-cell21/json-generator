@@ -25,7 +25,15 @@ export interface ArrayField {
 
 export type SchemaInput = Record<string, FieldSchema>;
 
+function randomPicsumUrl(): string {
+  const width = faker.number.int({ min: 400, max: 1200 });
+  const height = faker.number.int({ min: 300, max: 900 });
+  const seed = faker.string.alphanumeric(10);
+  return `https://picsum.photos/seed/${seed}/${width}/${height}.jpg`;
+}
+
 const customStringGenerators: Record<string, () => string> = {
+  "custom.randomImage": () => randomPicsumUrl(),
   "custom.sex": () =>
     faker.helpers.arrayElement([
       "male",
@@ -212,7 +220,11 @@ function resolveFaker(fakerType: string): unknown {
       current = current[part];
     }
     if (typeof current === "function") {
-      return formatFakerValue(current());
+      const value = current();
+      if (fakerType === "image.url" || fakerType === "image.avatar") {
+        return typeof value === "string" ? value : String(value);
+      }
+      return formatFakerValue(value);
     }
     return formatFakerValue(current);
   } catch {

@@ -114,11 +114,12 @@ export const stringFakerOptions: FakerOption[] = [
   { label: "Record Locator", value: "custom.recordLocator" },
 
   // Color & image
+  { label: "Random Photo URL", value: "custom.randomImage" },
   { label: "Color Name", value: "color.human" },
   { label: "RGB Color", value: "color.rgb" },
   { label: "CSS Color Space", value: "color.cssSupportedSpace" },
   { label: "Avatar URL", value: "image.avatar" },
-  { label: "Image URL", value: "image.url" },
+  { label: "Placeholder Image URL", value: "image.url" },
 
   // Date & time (ISO formatted)
   { label: "Birthdate (ISO)", value: "custom.birthdateIso" },
