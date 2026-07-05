@@ -8,6 +8,7 @@ import {
   arrayItemTypes,
 } from "@/lib/fakerOptions";
 import SchemaBuilder from "./SchemaBuilder";
+import SearchableSelect from "./SearchableSelect";
 
 interface FieldRowProps {
   fieldKey: string;
@@ -143,33 +144,19 @@ export default function FieldRow({
           </select>
 
           {field.type === "string" && (
-            <select
+            <SearchableSelect
+              options={stringFakerOptions}
               value={(field as any).fakerType ?? ""}
-              onChange={(e) => handleFakerTypeChange(e.target.value)}
-              className={selectClass}
-            >
-              <option value="">Select faker type</option>
-              {stringFakerOptions.map((o) => (
-                <option key={o.value} value={o.value}>
-                  {o.label}
-                </option>
-              ))}
-            </select>
+              onChange={handleFakerTypeChange}
+            />
           )}
 
           {field.type === "number" && (
-            <select
+            <SearchableSelect
+              options={numberFakerOptions}
               value={(field as any).fakerType ?? ""}
-              onChange={(e) => handleFakerTypeChange(e.target.value)}
-              className={selectClass}
-            >
-              <option value="">Select faker type</option>
-              {numberFakerOptions.map((o) => (
-                <option key={o.value} value={o.value}>
-                  {o.label}
-                </option>
-              ))}
-            </select>
+              onChange={handleFakerTypeChange}
+            />
           )}
 
           {field.type === "array" && (
@@ -187,33 +174,19 @@ export default function FieldRow({
               </select>
 
               {(field as any).itemType === "string" && (
-                <select
+                <SearchableSelect
+                  options={stringFakerOptions}
                   value={(field as any).fakerType ?? ""}
-                  onChange={(e) => handleFakerTypeChange(e.target.value)}
-                  className={selectClass}
-                >
-                  <option value="">Select faker type</option>
-                  {stringFakerOptions.map((o) => (
-                    <option key={o.value} value={o.value}>
-                      {o.label}
-                    </option>
-                  ))}
-                </select>
+                  onChange={handleFakerTypeChange}
+                />
               )}
 
               {(field as any).itemType === "number" && (
-                <select
+                <SearchableSelect
+                  options={numberFakerOptions}
                   value={(field as any).fakerType ?? ""}
-                  onChange={(e) => handleFakerTypeChange(e.target.value)}
-                  className={selectClass}
-                >
-                  <option value="">Select faker type</option>
-                  {numberFakerOptions.map((o) => (
-                    <option key={o.value} value={o.value}>
-                      {o.label}
-                    </option>
-                  ))}
-                </select>
+                  onChange={handleFakerTypeChange}
+                />
               )}
 
               <input
