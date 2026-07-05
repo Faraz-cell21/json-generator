@@ -2,6 +2,8 @@ import type { MetadataRoute } from "next";
 import { ADMIN_PATH, LOGIN_PATH } from "@/lib/authRoutes";
 import { getSiteUrl } from "@/lib/site";
 
+export const dynamic = "force-dynamic";
+
 export default function robots(): MetadataRoute.Robots {
   return {
     rules: {
