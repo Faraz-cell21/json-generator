@@ -43,6 +43,16 @@ export default function SchemaBuilder({
 
   return (
     <div className="w-full max-w-full">
+      {depth > 0 && Object.keys(schema).length > 0 && (
+        <button
+          type="button"
+          onClick={addField}
+          className="mb-2 w-full sm:w-auto text-sm text-green-700 hover:text-green-900 border border-green-300 hover:border-green-500 rounded px-4 py-2 min-h-[40px] transition bg-white hover:bg-green-50"
+        >
+          + Add Field
+        </button>
+      )}
+
       {Object.entries(schema).map(([key, field]) => (
         <FieldRow
           key={key}

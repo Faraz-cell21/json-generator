@@ -287,4 +287,6 @@ export const arrayItemTypes = [
   { label: "Number", value: "number" },
   { label: "Boolean", value: "boolean" },
   { label: "Object", value: "object" },
+  { label: "Array", value: "array" },
+  { label: "Tuple", value: "tuple" },
 ];

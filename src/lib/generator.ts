@@ -1,29 +1,13 @@
 import { faker } from "@faker-js/faker";
+import type {
+  ArrayField,
+  ArrayItemConfig,
+  SchemaField,
+  SchemaState,
+} from "@/types/schema";
 
-export type FieldSchema =
-  | PrimitiveField
-  | ObjectField
-  | ArrayField;
-
-export interface PrimitiveField {
-  type: "string" | "number" | "boolean";
-  fakerType?: string;
-}
-
-export interface ObjectField {
-  type: "object";
-  fields: Record<string, FieldSchema>;
-}
-
-export interface ArrayField {
-  type: "array";
-  itemType: "string" | "number" | "boolean" | "object";
-  fakerType?: string;
-  count?: number;
-  fields?: Record<string, FieldSchema>;
-}
-
-export type SchemaInput = Record<string, FieldSchema>;
+export type FieldSchema = SchemaField;
+export type SchemaInput = SchemaState;
 
 function randomPicsumUrl(): string {
   const width = faker.number.int({ min: 400, max: 1200 });
@@ -232,6 +216,50 @@ function resolveFaker(fakerType: string): unknown {
   }
 }
 
+function generateTuple(items: SchemaField[]): unknown[] {
+  return items.map((item) => generateValue(item));
+}
+
+function generateArrayItems(fieldSchema: ArrayField | ArrayItemConfig): unknown[] {
+  const count = fieldSchema.count ?? faker.number.int({ min: 2, max: 5 });
+
+  if (fieldSchema.itemType === "object" && fieldSchema.fields) {
+    return Array.from({ length: count }, () =>
+      generateFromSchema(fieldSchema.fields!)
+    );
+  }
+
+  if (fieldSchema.itemType === "array" && fieldSchema.itemSchema) {
+    return Array.from({ length: count }, () =>
+      generateArrayItems(fieldSchema.itemSchema!)
+    );
+  }
+
+  if (fieldSchema.itemType === "tuple" && fieldSchema.tupleItems) {
+    return Array.from({ length: count }, () =>
+      generateTuple(fieldSchema.tupleItems!)
+    );
+  }
+
+  return Array.from({ length: count }, () => {
+    if (fieldSchema.fakerType) {
+      const value = resolveFaker(fieldSchema.fakerType);
+      if (fieldSchema.itemType === "number") {
+        return typeof value === "number" ? value : Number(value);
+      }
+      return value;
+    }
+    switch (fieldSchema.itemType) {
+      case "number":
+        return faker.number.int({ min: 1, max: 1000 });
+      case "boolean":
+        return faker.datatype.boolean();
+      default:
+        return faker.word.sample();
+    }
+  });
+}
+
 function generateValue(fieldSchema: FieldSchema): unknown {
   switch (fieldSchema.type) {
     case "string":
@@ -252,33 +280,11 @@ function generateValue(fieldSchema: FieldSchema): unknown {
     case "object":
       return generateFromSchema(fieldSchema.fields);
 
-    case "array": {
-      const count = fieldSchema.count ?? faker.number.int({ min: 2, max: 5 });
+    case "array":
+      return generateArrayItems(fieldSchema);
 
-      if (fieldSchema.itemType === "object" && fieldSchema.fields) {
-        return Array.from({ length: count }, () =>
-          generateFromSchema(fieldSchema.fields!)
-        );
-      }
-
-      return Array.from({ length: count }, () => {
-        if (fieldSchema.fakerType) {
-          const value = resolveFaker(fieldSchema.fakerType);
-          if (fieldSchema.itemType === "number") {
-            return typeof value === "number" ? value : Number(value);
-          }
-          return value;
-        }
-        switch (fieldSchema.itemType) {
-          case "number":
-            return faker.number.int({ min: 1, max: 1000 });
-          case "boolean":
-            return faker.datatype.boolean();
-          default:
-            return faker.word.sample();
-        }
-      });
-    }
+    case "tuple":
+      return generateTuple(fieldSchema.tupleItems);
 
     default:
       return null;

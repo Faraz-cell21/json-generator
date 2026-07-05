@@ -1,14 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { SchemaField, FieldType, isUnnamedFieldKey } from "@/types/schema";
+import { SchemaField, FieldType, isUnnamedFieldKey, UNNAMED_FIELD_PREFIX } from "@/types/schema";
 import {
   stringFakerOptions,
   numberFakerOptions,
-  arrayItemTypes,
 } from "@/lib/fakerOptions";
 import SchemaBuilder from "./SchemaBuilder";
 import SearchableSelect from "./SearchableSelect";
+import ArrayItemEditor from "./ArrayItemEditor";
+import TupleItemEditor from "./TupleItemEditor";
 
 interface FieldRowProps {
   fieldKey: string;
@@ -25,6 +26,7 @@ const fieldTypes: { label: string; value: FieldType }[] = [
   { label: "Boolean", value: "boolean" },
   { label: "Object", value: "object" },
   { label: "Array", value: "array" },
+  { label: "Tuple", value: "tuple" },
 ];
 
 export default function FieldRow({
@@ -58,37 +60,20 @@ export default function FieldRow({
     if (newType === "object") {
       onUpdate(fieldKey, { type: "object", fields: {} });
     } else if (newType === "array") {
-      onUpdate(fieldKey, { type: "array", itemType: "string" });
+      onUpdate(fieldKey, { type: "array", itemType: "object", fields: {} });
+    } else if (newType === "tuple") {
+      onUpdate(fieldKey, { type: "tuple", tupleItems: [{ type: "string" }] });
     } else {
       onUpdate(fieldKey, { type: newType });
     }
   };
 
   const handleFakerTypeChange = (fakerType: string) => {
-    onUpdate(fieldKey, { ...field, fakerType } as any);
+    onUpdate(fieldKey, { ...field, fakerType } as SchemaField);
   };
 
-  const handleArrayItemTypeChange = (itemType: string) => {
-    if (itemType === "object") {
-      onUpdate(fieldKey, { type: "array", itemType: "object", fields: {} });
-    } else {
-      onUpdate(fieldKey, {
-        type: "array",
-        itemType: itemType as any,
-        fakerType: undefined,
-        fields: undefined,
-      });
-    }
-  };
-
-  const handleArrayCountChange = (count: number) => {
-    onUpdate(fieldKey, { ...field, count } as any);
-  };
-
-  const handleNestedUpdate = (
-    nestedFields: Record<string, SchemaField>
-  ) => {
-    onUpdate(fieldKey, { ...field, fields: nestedFields } as any);
+  const handleNestedUpdate = (nestedFields: Record<string, SchemaField>) => {
+    onUpdate(fieldKey, { ...field, fields: nestedFields } as SchemaField);
   };
 
   const inputClass =
@@ -146,7 +131,7 @@ export default function FieldRow({
           {field.type === "string" && (
             <SearchableSelect
               options={stringFakerOptions}
-              value={(field as any).fakerType ?? ""}
+              value={field.fakerType ?? ""}
               onChange={handleFakerTypeChange}
             />
           )}
@@ -154,76 +139,61 @@ export default function FieldRow({
           {field.type === "number" && (
             <SearchableSelect
               options={numberFakerOptions}
-              value={(field as any).fakerType ?? ""}
+              value={field.fakerType ?? ""}
               onChange={handleFakerTypeChange}
             />
-          )}
-
-          {field.type === "array" && (
-            <>
-              <select
-                value={(field as any).itemType ?? "string"}
-                onChange={(e) => handleArrayItemTypeChange(e.target.value)}
-                className={selectClass}
-              >
-                {arrayItemTypes.map((t) => (
-                  <option key={t.value} value={t.value}>
-                    {t.label}
-                  </option>
-                ))}
-              </select>
-
-              {(field as any).itemType === "string" && (
-                <SearchableSelect
-                  options={stringFakerOptions}
-                  value={(field as any).fakerType ?? ""}
-                  onChange={handleFakerTypeChange}
-                />
-              )}
-
-              {(field as any).itemType === "number" && (
-                <SearchableSelect
-                  options={numberFakerOptions}
-                  value={(field as any).fakerType ?? ""}
-                  onChange={handleFakerTypeChange}
-                />
-              )}
-
-              <input
-                type="number"
-                min={1}
-                max={20}
-                placeholder="count"
-                value={(field as any).count ?? ""}
-                onChange={(e) =>
-                  handleArrayCountChange(Number(e.target.value))
-                }
-                className={inputClass}
-              />
-            </>
           )}
         </div>
       </div>
 
-      {/* Nested object fields */}
       {field.type === "object" && (
         <div className="mt-3">
+          <div className="flex items-center justify-between gap-2 mb-2">
+            <p className="text-xs text-green-700 font-medium">Nested object fields:</p>
+            <button
+              type="button"
+              onClick={() => {
+                const key = `${UNNAMED_FIELD_PREFIX}${Date.now()}`;
+                handleNestedUpdate({
+                  ...(field.fields ?? {}),
+                  [key]: { type: "string" },
+                });
+              }}
+              className="text-xs text-green-700 hover:text-green-900 border border-green-300 hover:border-green-500 bg-white rounded px-3 py-1.5 transition shrink-0"
+            >
+              + Add Field
+            </button>
+          </div>
           <SchemaBuilder
-            schema={(field as any).fields ?? {}}
+            schema={field.fields ?? {}}
             onChange={handleNestedUpdate}
             depth={depth + 1}
           />
         </div>
       )}
 
-      {/* Nested array object fields */}
-      {field.type === "array" && (field as any).itemType === "object" && (
+      {field.type === "array" && (
         <div className="mt-3">
-          <p className="text-xs text-green-700 mb-1">Array item structure:</p>
-          <SchemaBuilder
-            schema={(field as any).fields ?? {}}
-            onChange={handleNestedUpdate}
-            depth={depth + 1}
+          <ArrayItemEditor
+            config={field}
+            onChange={(config) =>
+              onUpdate(fieldKey, { type: "array", ...config })
+            }
+            depth={depth}
+            label="Array items:"
+          />
+        </div>
+      )}
+
+      {field.type === "tuple" && (
+        <div className="mt-3">
+          <TupleItemEditor
+            items={field.tupleItems}
+            onChange={(tupleItems) =>
+              onUpdate(fieldKey, { type: "tuple", tupleItems })
+            }
+            depth={depth}
+            label="Tuple positions (each index has its own type):"
           />
         </div>
       )}
